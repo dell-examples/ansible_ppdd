@@ -10,7 +10,6 @@
     validate_certs: false
     body: |
       {
-        "current_password": "{{ current_password | string}}",
         "new_password": "{{ new_password | string}}"
       }    
   register: result
