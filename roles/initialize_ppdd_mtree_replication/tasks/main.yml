@@ -9,7 +9,7 @@
     status_code: 200,500, -1
     validate_certs: false
   register: result  
-  when: not ansible_check_mode and operation in operations
+  when: not ansible_check_mode
 - set_fact:
     init: "{{ result.json if result.json is defined}}"
 - debug:
