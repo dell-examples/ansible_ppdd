@@ -156,7 +156,9 @@
       name: initialize_ppdd_mtree_replication
     vars:
       ID: "{{ mtree_replications.contexts[0].id }}"
-    when: mtree_replications.contexts[0].id is defined  
+    when: 
+      - mtree_replications.contexts[0].id is defined  
+      - mtree_replications.contexts[0].status == "UNINITIALIZED"
 
   - name: Checking Mtree Replication
     include_role: 
