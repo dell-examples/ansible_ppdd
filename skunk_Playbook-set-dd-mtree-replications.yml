@@ -64,8 +64,8 @@
     vars:
       mtree_name: "{{ mtree_name }}"
       data:
-        sourceHostname: "{{ sourceHostname }}"
-        targetHostname: "{{ targetHostname }}"
+        sourceHostname: "{{ targetHostname }}"
+        targetHostname: "{{ sourceHostname }}"
         connectionHostname: "{{ targetHostname }}"
         port: "{{ port }}"
         sourcePath: "mtree://{{ sourceHostname }}/data/col1/{{ mtree_name }}"
