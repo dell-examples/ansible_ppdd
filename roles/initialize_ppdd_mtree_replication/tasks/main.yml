@@ -2,7 +2,7 @@
 - name: Initialize Replication COntext for Mtree Replication ID {{ ID }}
   uri:
     method: POST
-    url: "{{ ppdd_baseurl }}:{{ ppdd_port }}/{{ ppdd_api_ver }}/dd-systems/{{ system_id }}mtree-replications/{{ ID }}/initialize"
+    url: "{{ ppdd_baseurl }}:{{ ppdd_port }}/{{ ppdd_api_ver }}/dd-systems/{{ system_id }}/mtree-replications/{{ ID }}/initialize"
     body_format: json
     headers:
       X-DD-AUTH-TOKEN: "{{ access_token }}"    
