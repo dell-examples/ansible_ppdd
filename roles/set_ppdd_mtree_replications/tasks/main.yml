@@ -1,0 +1,37 @@
+#/api/v1/dd-systems/{SYSTEM-ID}/file-systems/block-storages
+- name: Checking Mtree Replication
+  include_role: 
+    name: get_ppdd_mtree_replications
+  vars:
+    my_filter: "sourceMtreePath={{ mtree_name | basename }}"    
+- debug:
+   msg: |
+    "replication of mtree {{ mtree_name }} already defined" 
+    "{{ mtree_replications}}"
+  when:  mtree_replications.paging_info.total_entries == 1
+
+- name: New DD Mtree Replications {{ sourcePath }}
+  uri:
+    method: POST
+    url: "{{ ppdd_baseurl }}:{{ ppdd_port }}/{{ ppdd_api_ver }}/dd-systems/{{ system_id }}/mtree-replications"
+    body_format: json
+    body: 
+      MtreeReplicationAdd: "{{ data }}"
+    headers:
+      X-DD-AUTH-TOKEN: "{{ access_token }}"    
+    status_code: 201,400, -1
+    validate_certs: false
+  register: result  
+  when: not ansible_check_mode and mtree_replications.paging_info.total_entries == 0
+- set_fact:
+    mtree_replication: "{{ result.json }}"
+  when: result.json is defined
+- debug:
+    msg:  "{{ mtree_replication }}"
+    verbosity: 1
+  when:
+   - mtree_replication  is defined
+
+
+
+

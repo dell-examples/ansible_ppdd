@@ -1,0 +1,84 @@
+# Example Playbok to configure PPDD
+- name: Playbook to configure DataDomain for PPDM
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  vars_files: 
+    - ./vars/main.yml
+  vars: 
+    mtree_name: SysDR_ppdm-baremetal
+    sourceHostname: "ddve3.home.labbuildr.com"
+    targetHostname: "ddve4.home.labbuildr.com"
+    connectionHostname: "ddve3.home.labbuildr.com"
+    port: 2051
+    encryption: false
+    authentication: "DISABLED"
+    propagateRetentionLock: false
+    ipVersion: "IPV4"
+    destinationTenantUnit: "0"
+    maxReplStreams: 8 
+    source_password: "{{ ppdd_password }}"
+    target_password: "{{ ppdd_password }}"
+    source_username: "{{ ppdd_username }}"   
+    target_username: "{{ ppdd_username }}"   
+  tasks:
+  - name: Checking if PPDD FQDN / IP is set
+    fail: 
+      msg: "We do not have sourceHostname set !"
+    when: (sourceHostname is not defined) or (sourceHostname|length <= 8)
+  - name: Checking source_password is set
+    fail: 
+      msg: "We do not have source_password  set !"
+    when: (source_password is not defined) or (source_password|length == 0)     
+  - name: Setting Base URL
+    set_fact: 
+      ppdd_baseurl: "https://{{ sourceHostname }}"  
+  - name: Check Source DataDomain Appliance Ready {{ sourceHostname }}
+    include_role:
+      name: wait_ppdd_api_ready 
+  - debug: 
+      msg: "{{ result }}"
+      verbosity: 1            
+  - name: Get PPDD Token for {{ sourceHostname }}
+    vars:
+      username: "{{ source_username }}"
+      password: "{{ source_password }}"
+    include_role: 
+      name: get_ppdd_token
+  - debug: 
+      msg: "{{ access_token }}"
+      verbosity: 1
+  - name: Checking Mtree exists
+    include_role: 
+      name: get_ppdd_mtrees
+    vars:
+      id: "/data/col1/{{ mtree_name | basename }}"    
+  - debug:
+     msg: "{{ mtrees }}"
+     verbosity: 0 
+    when:
+      - mtrees 
+      
+  - name: Set PPDD Mtrees Replication
+    include_role: 
+      name: set_ppdd_mtree_replications
+    vars:
+      mtree_name: "{{ mtree_name }}"
+      data:
+        sourceHostname: "{{ sourceHostname }}"
+        targetHostname: "{{ targetHostname }}"
+        connectionHostname: "{{ connectionHostname }}"
+        port: "{{ port }}"
+        sourcePath: "mtree://{{ sourceHostname }}{{ mtree_name }}"
+        targetPath: "mtree://{{ targetHostname }}{{ mtree_name }}_repl"
+        encryption: "{{ encryption }}"
+        authentication: "{{ authentication }}"
+        propagateRetentionLock: "{{ propagateRetentionLock }}"
+        ipVersion: "{{ ipVersion }}"
+        destinationTenantUnit: "{{ destinationTenantUnit }}"
+        maxReplStreams: "{{ maxReplStreams }}"
+  - debug:
+      msg: "{{ mtree_replication }}"
+      verbosity: 0 
+    when: mtree_replication is defined
+      

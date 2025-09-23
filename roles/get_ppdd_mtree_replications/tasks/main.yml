@@ -1,0 +1,36 @@
+
+- name: Define uri with id
+  set_fact: 
+    uri: "{{ ppdd_baseurl }}:{{ ppdd_port }}/{{ ppdd_api_ver }}/dd-systems/{{ system_id }}/mtree-replications/{{ id | regex_replace('/','%2F') }}"
+  when: id  | default('', true) | trim != ''
+- name: Define uri without id
+  set_fact: 
+    uri: "{{ ppdd_baseurl }}:{{ ppdd_port }}/{{ ppdd_api_ver }}/dd-systems/{{ system_id }}/mtree-replications"
+  when: id  | default('', false) | trim == ''
+- name: Define uri with filter
+  set_fact: 
+    uri: "{{ uri }}?filter={{ filter |urlencode}}&include_fields={{ include_fields |urlencode}}"
+  when: filter | default('', true) | trim != ''  
+# - name: Define uri without filter
+#  set_fact: 
+#    uri: "{{ uri }}?&include_fields={{ include_fields|urlencode} }}"
+#  when: filter | default('', false) | trim == '' 
+
+
+- name: Get PPDD Mtree Replicationss
+  uri:
+    method: GET
+    url: "{{ uri }}"
+    body_format: json 
+    headers:
+      X-DD-AUTH-TOKEN: "{{ access_token }}"    
+    status_code: 200,404
+    validate_certs: false
+  register: result  
+  when: not ansible_check_mode 
+- set_fact:
+    mtree_replications: "{{ result.json }}"
+  when: result.json is defined and result.status != 404
+
+
+
