@@ -156,3 +156,12 @@
       name: initialize_ppdd_mtree_replication
     vars:
       ID: "{{ mtree_replications.contexts[0].id }}"
+
+  - name: Checking Mtree Replication
+    include_role: 
+      name: get_ppdd_mtree_replications
+    vars:
+      filter: "sourceMtreePath=/data/col1/{{ mtree_name | basename }} and destinationMtreePath=/data/col1/{{ mtree_name | basename }}_repl and sourceHost={{ sourceHostname }} and destinationHost={{ targetHostname }}"
+  - debug:
+      msg: "{{ mtree_replications}}"
+    when:  mtree_replications.paging_info.total_entries == 1      
