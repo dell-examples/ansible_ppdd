@@ -21,67 +21,6 @@
     source_username: "{{ ppdd_username }}"   
     target_username: "{{ ppdd_username }}"   
   tasks:
-  - name: Checking if PPDD FQDN / IP is set
-    fail: 
-      msg: "We do not have sourceHostname set !"
-    when: (sourceHostname is not defined) or (sourceHostname|length <= 8)
-  - name: Checking source_password is set
-    fail: 
-      msg: "We do not have source_password  set !"
-    when: (source_password is not defined) or (source_password|length == 0)     
-  - name: Setting Base URL
-    set_fact: 
-      ppdd_baseurl: "https://{{ sourceHostname }}"  
-  - name: Check Source DataDomain Appliance Ready {{ sourceHostname }}
-    include_role:
-      name: wait_ppdd_api_ready 
-  - debug: 
-      msg: "{{ result }}"
-      verbosity: 1            
-  - name: Get PPDD Token for {{ sourceHostname }}
-    vars:
-      username: "{{ source_username }}"
-      password: "{{ source_password }}"
-    include_role: 
-      name: get_ppdd_token
-  - debug: 
-      msg: "{{ access_token }}"
-      verbosity: 1
-  - name: Checking Mtree exists
-    include_role: 
-      name: get_ppdd_mtrees
-    vars:
-      id: "/data/col1/{{ mtree_name | basename }}"    
-  - debug:
-     msg: "{{ mtrees }}"
-     verbosity: 0 
-    when:
-      - mtrees 
-      
-  - name: Set PPDD Mtrees Replication
-    include_role: 
-      name: set_ppdd_mtree_replications
-    vars:
-      mtree_name: "{{ mtree_name }}"
-      data:
-        sourceHostname: "{{ targetHostname }}"
-        targetHostname: "{{ sourceHostname }}"
-        connectionHostname: "{{ targetHostname }}"
-        port: "{{ port }}"
-        sourcePath: "mtree://{{ sourceHostname }}/data/col1/{{ mtree_name }}"
-        targetPath: "mtree://{{ targetHostname }}/data/col1/{{ mtree_name }}_repl"
-        encryption: "{{ encryption }}"
-        authentication: "{{ authentication }}"
-        propagateRetentionLock: "{{ propagateRetentionLock }}"
-        ipVersion: "{{ ipVersion }}"
-        destinationTenantUnit: "{{ destinationTenantUnit }}"
-        maxReplStreams: "{{ maxReplStreams }}"
-  - debug:
-      msg: "{{ mtree_replication }}"
-      verbosity: 0 
-    when: mtree_replication is defined
-      
-
 
 ###### Target Operations
 
@@ -144,6 +83,73 @@
       msg: "{{ mtree_replication }}"
       verbosity: 0 
     when: mtree_replication is defined
+
+### Source Operations
+
+
+  - name: Checking if PPDD FQDN / IP is set
+    fail: 
+      msg: "We do not have sourceHostname set !"
+    when: (sourceHostname is not defined) or (sourceHostname|length <= 8)
+  - name: Checking source_password is set
+    fail: 
+      msg: "We do not have source_password  set !"
+    when: (source_password is not defined) or (source_password|length == 0)     
+  - name: Setting Base URL
+    set_fact: 
+      ppdd_baseurl: "https://{{ sourceHostname }}"  
+  - name: Check Source DataDomain Appliance Ready {{ sourceHostname }}
+    include_role:
+      name: wait_ppdd_api_ready 
+  - debug: 
+      msg: "{{ result }}"
+      verbosity: 1            
+  - name: Get PPDD Token for {{ sourceHostname }}
+    vars:
+      username: "{{ source_username }}"
+      password: "{{ source_password }}"
+    include_role: 
+      name: get_ppdd_token
+  - debug: 
+      msg: "{{ access_token }}"
+      verbosity: 1
+  - name: Checking Mtree exists
+    include_role: 
+      name: get_ppdd_mtrees
+    vars:
+      id: "/data/col1/{{ mtree_name | basename }}"    
+  - debug:
+     msg: "{{ mtrees }}"
+     verbosity: 0 
+    when:
+      - mtrees 
+      
+  - name: Set PPDD Mtrees Replication
+    include_role: 
+      name: set_ppdd_mtree_replications
+    vars:
+      mtree_name: "{{ mtree_name }}"
+      data:
+        sourceHostname: "{{ targetHostname }}"
+        targetHostname: "{{ sourceHostname }}"
+        connectionHostname: "{{ targetHostname }}"
+        port: "{{ port }}"
+        sourcePath: "mtree://{{ sourceHostname }}/data/col1/{{ mtree_name }}"
+        targetPath: "mtree://{{ targetHostname }}/data/col1/{{ mtree_name }}_repl"
+        encryption: "{{ encryption }}"
+        authentication: "{{ authentication }}"
+        propagateRetentionLock: "{{ propagateRetentionLock }}"
+        ipVersion: "{{ ipVersion }}"
+        destinationTenantUnit: "{{ destinationTenantUnit }}"
+        maxReplStreams: "{{ maxReplStreams }}"
+  - debug:
+      msg: "{{ mtree_replication }}"
+      verbosity: 0 
+    when: mtree_replication is defined
+      
+
+
+
       
   - name: Checking Mtree Replication
     include_role: 
