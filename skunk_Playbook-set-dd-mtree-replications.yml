@@ -14,7 +14,7 @@
     authentication: "DISABLED"
     propagateRetentionLock: false
     ipVersion: "IPV4"
-    destinationTenantUnit: "0"
+    destinationTenantUnit: 0
     maxReplStreams: 8 
     source_password: "{{ ppdd_password }}"
     target_password: "{{ ppdd_password }}"
