@@ -145,3 +145,11 @@
       verbosity: 0 
     when: mtree_replication is defined
       
+  - name: Checking Mtree Replication
+    include_role: 
+      name: get_ppdd_mtree_replications
+    vars:
+      filter: "sourceMtreePath=/data/col1/{{ mtree_name | basename }} and destinationMtreePath=/data/col1/{{ mtree_name | basename }}_repl and sourceHost={{ sourceHostname }} and destinationHost={{ targetHostname }}"
+  - debug:
+    msg: "{{ mtree_replications}}"
+    when:  mtree_replications.paging_info.total_entries == 1
