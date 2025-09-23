@@ -82,3 +82,67 @@
       verbosity: 0 
     when: mtree_replication is defined
       
+
+
+###### Target Operations
+
+  - name: Checking if PPDD FQDN / IP is set
+    fail: 
+      msg: "We do not have targetHostname set !"
+    when: (targetHostname is not defined) or (targetHostname|length <= 8)
+  - name: Checking target_password is set
+    fail: 
+      msg: "We do not have target_password  set !"
+    when: (target_password is not defined) or (target_password|length == 0)     
+  - name: Setting Base URL
+    set_fact: 
+      ppdd_baseurl: "https://{{ targetHostname }}"  
+  - name: Check target DataDomain Appliance Ready {{ targetHostname }}
+    include_role:
+      name: wait_ppdd_api_ready 
+  - debug: 
+      msg: "{{ result }}"
+      verbosity: 1            
+  - name: Get PPDD Token for {{ targetHostname }}
+    vars:
+      username: "{{ target_username }}"
+      password: "{{ target_password }}"
+    include_role: 
+      name: get_ppdd_token
+  - debug: 
+      msg: "{{ access_token }}"
+      verbosity: 1
+  - name: Checking Mtree exists
+    include_role: 
+      name: get_ppdd_mtrees
+    vars:
+      id: "/data/col1/{{ mtree_name | basename }}"    
+  - debug:
+     msg: "{{ mtrees }}"
+     verbosity: 0 
+    when:
+      - mtrees 
+      
+  - name: Set PPDD Mtrees Replication
+    include_role: 
+      name: set_ppdd_mtree_replications
+    vars:
+      mtree_name: "{{ mtree_name }}"
+      data:
+        sourceHostname: "{{ sourceHostname }}"
+        targetHostname: "{{ targetHostname }}"
+        connectionHostname: "{{ connectionHostname }}"
+        port: "{{ port }}"
+        sourcePath: "mtree://{{ sourceHostname }}/data/col1/{{ mtree_name }}"
+        targetPath: "mtree://{{ targetHostname }}/data/col1/{{ mtree_name }}_repl"
+        encryption: "{{ encryption }}"
+        authentication: "{{ authentication }}"
+        propagateRetentionLock: "{{ propagateRetentionLock }}"
+        ipVersion: "{{ ipVersion }}"
+        destinationTenantUnit: "{{ destinationTenantUnit }}"
+        maxReplStreams: "{{ maxReplStreams }}"
+  - debug:
+      msg: "{{ mtree_replication }}"
+      verbosity: 0 
+    when: mtree_replication is defined
+      
