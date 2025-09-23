@@ -9,7 +9,6 @@
     mtree_name: SysDR_ppdm-baremetal
     sourceHostname: "ddve3.home.labbuildr.com"
     targetHostname: "ddve4.home.labbuildr.com"
-    connectionHostname: "ddve3.home.labbuildr.com"
     port: 2051
     encryption: false
     authentication: "DISABLED"
@@ -67,7 +66,7 @@
       data:
         sourceHostname: "{{ sourceHostname }}"
         targetHostname: "{{ targetHostname }}"
-        connectionHostname: "{{ connectionHostname }}"
+        connectionHostname: "{{ targetHostname }}"
         port: "{{ port }}"
         sourcePath: "mtree://{{ sourceHostname }}/data/col1/{{ mtree_name }}"
         targetPath: "mtree://{{ targetHostname }}/data/col1/{{ mtree_name }}_repl"
@@ -131,7 +130,7 @@
       data:
         sourceHostname: "{{ sourceHostname }}"
         targetHostname: "{{ targetHostname }}"
-        connectionHostname: "{{ connectionHostname }}"
+        connectionHostname: "{{ sourceHostname }}"
         port: "{{ port }}"
         sourcePath: "mtree://{{ sourceHostname }}/data/col1/{{ mtree_name }}"
         targetPath: "mtree://{{ targetHostname }}/data/col1/{{ mtree_name }}_repl"
