@@ -153,3 +153,10 @@
   - debug:
       msg: "{{ mtree_replications}}"
     when:  mtree_replications.paging_info.total_entries == 1
+
+
+  - name: Initzialize Mtree Replication
+    include_role: 
+      name: initialize_ppdd_mtree_replication
+    vars:
+      ID: mtree_replications.contexts[0].id
