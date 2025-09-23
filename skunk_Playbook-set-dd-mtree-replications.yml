@@ -50,16 +50,6 @@
   - debug: 
       msg: "{{ access_token }}"
       verbosity: 1
-  - name: Checking Mtree exists
-    include_role: 
-      name: get_ppdd_mtrees
-    vars:
-      id: "/data/col1/{{ mtree_name | basename }}"    
-  - debug:
-     msg: "{{ mtrees }}"
-     verbosity: 0 
-    when:
-      - mtrees 
       
   - name: Set PPDD Mtrees Replication
     include_role: 
