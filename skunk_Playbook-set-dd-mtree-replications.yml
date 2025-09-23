@@ -158,7 +158,7 @@
       ID: "{{ mtree_replications.contexts[0].id }}"
     when: 
       - mtree_replications.contexts[0].id is defined  
-      - mtree_replications.contexts[0].status == "UNINITIALIZED"
+      - mtree_replications.contexts[0].state == "UNINITIALIZED"
 
   - name: Checking Mtree Replication
     include_role: 
