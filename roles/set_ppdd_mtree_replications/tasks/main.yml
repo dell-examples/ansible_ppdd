@@ -3,7 +3,7 @@
   include_role: 
     name: get_ppdd_mtree_replications
   vars:
-    my_filter: "sourceMtreePath={{ mtree_name | basename }}"    
+    filter: "sourceMtreePath={{ mtree_name | basename }} and destinationMtreePath={{ mtree_name | basename }}_repl and sourceHost={{ sourceHostname }} and destinationHost={{ targetHostname }}"
 - debug:
    msg: |
     "replication of mtree {{ mtree_name }} already defined" 
