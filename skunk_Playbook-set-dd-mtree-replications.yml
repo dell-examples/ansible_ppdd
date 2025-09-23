@@ -151,5 +151,5 @@
     vars:
       filter: "sourceMtreePath=/data/col1/{{ mtree_name | basename }} and destinationMtreePath=/data/col1/{{ mtree_name | basename }}_repl and sourceHost={{ targetHostname }} and destinationHost={{ sourceHostname }}"
   - debug:
-    msg: "{{ mtree_replications}}"
+      msg: "{{ mtree_replications}}"
     when:  mtree_replications.paging_info.total_entries == 1
