@@ -1,5 +1,5 @@
 
-- name: Initialize Replication COntext for Mtree Replication ID {{ ID }}
+- name: Initialize Replication Context for Mtree Replication ID {{ ID }} on {{ ppdd_baseurl }}
   uri:
     method: POST
     url: "{{ ppdd_baseurl }}:{{ ppdd_port }}/{{ ppdd_api_ver }}/dd-systems/{{ system_id }}/mtree-replications/{{ ID }}/initialize"

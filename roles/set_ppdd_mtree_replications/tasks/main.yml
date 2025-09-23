@@ -10,7 +10,7 @@
     "{{ mtree_replications}}"
   when:  mtree_replications.paging_info.total_entries == 1
 
-- name: New DD Mtree Replications {{ sourcePath }}
+- name: New DD Mtree Replications for {{ mtree_name }} on {{ ppdd_baseurl }}
   uri:
     method: POST
     url: "{{ ppdd_baseurl }}:{{ ppdd_port }}/{{ ppdd_api_ver }}/dd-systems/{{ system_id }}/mtree-replications"
