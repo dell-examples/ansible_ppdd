@@ -6,7 +6,7 @@
     body_format: json
     headers:
       X-DD-AUTH-TOKEN: "{{ access_token }}"    
-    status_code: 200,201,500, -1
+    status_code: 200,201,400,500, -1
     validate_certs: false
   register: result  
   when: not ansible_check_mode
