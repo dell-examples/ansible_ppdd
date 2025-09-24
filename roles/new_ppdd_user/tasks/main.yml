@@ -7,7 +7,7 @@
       role  : "{{ role }}"
       name   : "{{ user }}"
       password : "{{ password }}" 
-      force_password_change : "false"
+      force_password_change : "{{force_password_change | default(false) }}"
     headers:
       X-DD-AUTH-TOKEN: "{{ access_token }}"    
     status_code: 201,400,409, -1
