@@ -1,4 +1,3 @@
-#/api/v1/dd-systems/{SYSTEM-ID}/file-systems/block-storages
 - name: New DD User {{ user }}
   uri:
     method: POST
