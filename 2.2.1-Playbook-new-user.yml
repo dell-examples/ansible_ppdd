@@ -30,7 +30,7 @@
   - debug: 
       msg: "{{ access_token }}"
       verbosity: 1
-  - name: New User {{ new_username }}
+  - name: New User {{ new_user_name }}
     vars:
     body: 
       role  : "{{ new_user_role }}"
