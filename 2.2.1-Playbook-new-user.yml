@@ -32,7 +32,6 @@
       verbosity: 1
   - name: New User {{ new_user_name }}
     vars:
-    body: 
       role  : "{{ new_user_role }}"
       name   : "{{ new_user_name }}"
       password : "{{ new_user_password }}" 
