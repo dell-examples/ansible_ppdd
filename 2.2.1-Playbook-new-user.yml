@@ -35,7 +35,7 @@
       role  : "{{ new_user_role }}"
       user   : "{{ new_user }}"
       password : "{{ new_user_password }}" 
-      force_password_change : "false"
+      force_password_change : false
     include_role: 
       name: new_ppdd_user  
 
